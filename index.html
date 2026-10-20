@@ -23,19 +23,19 @@
       display: flex;
       flex-direction: column;
       min-height: 100svh;
-      padding: 0 1rem;
-      text-align: center;
+      padding: 0 clamp(1.5rem, 5vw, 4rem);
+      text-align: left;
     }
     main {
       flex: 1;
       display: flex;
       flex-direction: column;
-      align-items: center;
+      align-items: flex-start;
       justify-content: center;
       padding: 4rem 0 3rem;
     }
     .logo { width: clamp(80px, 12vw, 130px); height: auto; display: block; }
-    header { padding: 1.5rem 0.5rem 0; text-align: left; }
+    header { padding: 1.5rem 0 0; }
     h1 {
       margin: 0;
       font-weight: 400;
@@ -57,11 +57,9 @@
     }
     footer {
       max-width: 62em;
-      margin: 0 auto;
       padding: 2rem 0 2.5rem;
       font-size: 0.75rem;
       line-height: 1.6;
-      text-align: left;
       color: #8a8a8a;
     }
     footer p { margin: 0 0 0.9em; }
