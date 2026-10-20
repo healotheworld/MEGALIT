@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MEGALIT Studio</title>
+  <meta name="description" content="MEGALIT Studio. Business inquiries: simon@megalit.studio">
+  <meta property="og:title" content="MEGALIT Studio">
+  <meta property="og:url" content="https://megalit.studio/">
+  <meta name="theme-color" content="#000000">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+    body {
+      background: #000;
+      color: #fff;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100svh;
+      padding: 2rem 1rem;
+      text-align: center;
+    }
+    main { display: flex; flex-direction: column; align-items: center; gap: 2.75rem; }
+    .logo { width: clamp(96px, 18vw, 160px); height: auto; display: block; }
+    h1 {
+      margin: 0;
+      font-weight: 400;
+      font-size: clamp(1rem, 2.4vw, 1.35rem);
+      letter-spacing: 0.5em;
+      margin-right: -0.5em; /* offset trailing letter-spacing so text stays centered */
+      text-transform: uppercase;
+    }
+    footer {
+      position: fixed;
+      bottom: 2rem;
+      left: 0; right: 0;
+      font-size: 0.85rem;
+      letter-spacing: 0.08em;
+      color: #8a8a8a;
+    }
+    a { color: #fff; text-decoration: none; border-bottom: 1px solid #555; transition: border-color .2s; }
+    a:hover, a:focus-visible { border-color: #fff; outline: none; }
+  </style>
+</head>
+<body>
+  <main>
+    <img class="logo" src="logo.svg" alt="MEGALIT Studio logo">
+    <h1>Megalit Studio</h1>
+  </main>
+  <footer>
+    Business inquiries: <a href="mailto:simon@megalit.studio">simon@megalit.studio</a>
+  </footer>
+</body>
+</html>
