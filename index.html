@@ -35,23 +35,23 @@
       padding: 4rem 0 3rem;
     }
     .logo { width: clamp(80px, 12vw, 130px); height: auto; display: block; }
+    header { padding: 1.5rem 0.5rem 0; text-align: left; }
     h1 {
-      margin: 2.25rem 0 0;
+      margin: 0;
       font-weight: 400;
-      font-size: clamp(0.95rem, 1.8vw, 1.2rem);
-      letter-spacing: 0.5em;
-      margin-right: -0.5em; /* offset trailing letter-spacing so text stays centered */
+      font-size: 0.75rem;
+      letter-spacing: 0.4em;
       text-transform: uppercase;
     }
     .lead {
       max-width: 34em;
       margin: 3rem 0 0;
-      font-size: clamp(1.2rem, 2.3vw, 1.75rem);
-      line-height: 1.5;
+      font-size: clamp(1.1rem, 2vw, 1.5rem);
+      line-height: 1.35;
     }
     .contact {
       margin: 3rem 0 0;
-      font-size: clamp(1.15rem, 2.1vw, 1.6rem);
+      font-size: clamp(1rem, 1.8vw, 1.35rem);
       letter-spacing: 0.03em;
       color: #b0b0b0;
     }
@@ -61,6 +61,7 @@
       padding: 2rem 0 2.5rem;
       font-size: 0.75rem;
       line-height: 1.6;
+      text-align: left;
       color: #8a8a8a;
     }
     footer p { margin: 0 0 0.9em; }
@@ -70,9 +71,11 @@
   </style>
 </head>
 <body>
+  <header>
+    <h1>Megalit Studio</h1>
+  </header>
   <main>
     <img class="logo" src="logo.svg" alt="MEGALIT Studio logo">
-    <h1>Megalit Studio</h1>
     <p class="lead">MEGALIT Studio is a Stockholm production house that designs, delivers and runs the entire event. Festival-grade sound, lighting and immersive decor, built by the crew that made it, handled end to end at concierge level. The host does nothing but host.</p>
     <p class="contact">Business inquiries: <a href="mailto:simon@megalit.studio">simon@megalit.studio</a></p>
   </main>
