@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Plan your event · MEGALIT Studio</title>
+  <meta name="description" content="Tell MEGALIT Studio about your event: size, location, date and the services you need.">
+  <meta property="og:title" content="Plan your event · MEGALIT Studio">
+  <meta property="og:url" content="https://megalit.studio/book/">
+  <meta name="theme-color" content="#000000">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <!-- Jost is a free Futura-style fallback for devices without Futura installed -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; }
+    html { background: #000; overscroll-behavior: none; }
+    body {
+      background: #000;
+      color: #fff;
+      font-family: Futura, "Futura PT", "Jost", "Century Gothic", sans-serif;
+      letter-spacing: 0.035em;
+      display: flex;
+      flex-direction: column;
+      min-height: 100svh;
+      padding: 0 clamp(1.5rem, 5vw, 4rem);
+      overscroll-behavior: none;
+    }
+    header { padding: 1.5rem 0 0; display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
+    .wordmark {
+      margin: 0;
+      font-size: 0.75rem;
+      letter-spacing: 0.45em;
+      text-transform: uppercase;
+      color: #fff;
+      border: 0;
+    }
+    .progress { font-size: 0.75rem; letter-spacing: 0.1em; color: #8a8a8a; }
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 3rem 0;
+      max-width: 34rem;
+      width: 100%;
+    }
+    .step { display: none; }
+    .step.active { display: block; animation: fade .3s ease; }
+    @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+    @media (prefers-reduced-motion: reduce) { .step.active { animation: none; } }
+    fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
+    .eyebrow { margin: 0 0 1rem; font-size: 0.75rem; letter-spacing: 0.3em; text-transform: uppercase; color: #8a8a8a; }
+    h2, legend {
+      padding: 0;
+      margin: 0 0 0.6rem;
+      font-weight: 400;
+      font-size: clamp(1.5rem, 4vw, 2.1rem);
+      line-height: 1.2;
+    }
+    .hint { margin: 0 0 2rem; color: #b0b0b0; line-height: 1.45; font-size: 1rem; }
+    .options { display: grid; gap: 0.6rem; }
+    .option { position: relative; display: block; cursor: pointer; }
+    .option input { position: absolute; opacity: 0; pointer-events: none; }
+    .option span {
+      display: block;
+      padding: 0.95rem 1.1rem;
+      border: 1px solid #3a3a3a;
+      transition: border-color .15s, background .15s, color .15s;
+    }
+    .option small { display: block; margin-top: 0.25rem; font-size: 0.8rem; color: #8a8a8a; }
+    .option:hover span { border-color: #8a8a8a; }
+    .option input:focus-visible + span { outline: 1px solid #fff; outline-offset: 2px; }
+    .option input:checked + span { background: #fff; color: #000; border-color: #fff; }
+    .option input:checked + span small { color: #444; }
+    .group-label { margin: 1.75rem 0 0.75rem; font-size: 0.85rem; color: #b0b0b0; }
+    .field { display: block; margin-bottom: 1.25rem; }
+    .field > span { display: block; margin-bottom: 0.4rem; font-size: 0.85rem; color: #b0b0b0; }
+    .field em { font-style: normal; color: #6a6a6a; }
+    input[type=text], input[type=email], input[type=tel], input[type=date], textarea {
+      width: 100%;
+      padding: 0.8rem 0;
+      background: transparent;
+      border: 0;
+      border-bottom: 1px solid #3a3a3a;
+      border-radius: 0;
+      color: #fff;
+      font: inherit;
+      font-size: 1.1rem;
+      letter-spacing: inherit;
+      color-scheme: dark;
+    }
+    textarea { resize: vertical; min-height: 5rem; line-height: 1.4; }
+    input:focus, textarea:focus { outline: none; border-bottom-color: #fff; }
+    .check { display: flex; gap: 0.6rem; align-items: center; margin: 0.25rem 0 1.25rem; cursor: pointer; color: #b0b0b0; }
+    .check input { width: 1.1rem; height: 1.1rem; accent-color: #fff; }
+    .error { min-height: 1.4em; margin: 1rem 0 0; color: #ff8a80; font-size: 0.9rem; }
+    .nav { display: flex; gap: 1rem; align-items: center; margin-top: 1.25rem; }
+    button {
+      font: inherit;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+      cursor: pointer;
+      border: 1px solid #fff;
+      padding: 0.95rem 1.6rem;
+      background: #fff;
+      color: #000;
+      transition: opacity .15s;
+    }
+    button:hover { opacity: 0.85; }
+    button:focus-visible { outline: 1px solid #fff; outline-offset: 3px; }
+    button.ghost { background: transparent; color: #b0b0b0; border-color: transparent; padding-left: 0; padding-right: 0; }
+    button.ghost:hover { color: #fff; opacity: 1; }
+    button[disabled] { opacity: 0.5; cursor: wait; }
+    dl { margin: 0 0 1.5rem; display: grid; grid-template-columns: max-content 1fr; gap: 0.6rem 1.5rem; font-size: 0.95rem; }
+    dt { color: #8a8a8a; }
+    dd { margin: 0; overflow-wrap: anywhere; }
+    a { color: #fff; text-decoration: none; border-bottom: 1px solid #555; }
+    a:hover, a:focus-visible { border-color: #fff; outline: none; }
+    footer { padding: 0 0 1.5rem; font-size: 0.75rem; color: #6a6a6a; letter-spacing: 0.055em; }
+    @media (max-width: 420px) { dl { grid-template-columns: 1fr; gap: 0.15rem; } dd { margin-bottom: 0.6rem; } }
+  </style>
+</head>
+<body>
+  <header>
+    <a class="wordmark" href="/">Megalit Studio</a>
+    <span class="progress" id="progress" aria-live="polite"></span>
+  </header>
+
+  <main>
+    <form id="flow" novalidate>
+
+      <section class="step active" data-step="intro">
+        <p class="eyebrow">Plan your event</p>
+        <h2>Tell us about your event.</h2>
+        <p class="hint">Five short questions about size, location, date and the services you need. It takes about a minute, and we reply personally within two working days.</p>
+        <div class="nav"><button type="button" data-next>Start</button></div>
+      </section>
+
+      <section class="step" data-step="size">
+        <fieldset>
+          <legend>How many guests are you expecting?</legend>
+          <p class="hint">A rough estimate is fine.</p>
+          <div class="options">
+            <label class="option"><input type="radio" name="guests" value="Up to 50" required><span>Up to 50</span></label>
+            <label class="option"><input type="radio" name="guests" value="50–150"><span>50–150</span></label>
+            <label class="option"><input type="radio" name="guests" value="150–300"><span>150–300</span></label>
+            <label class="option"><input type="radio" name="guests" value="300–600"><span>300–600</span></label>
+            <label class="option"><input type="radio" name="guests" value="600+"><span>600+</span></label>
+          </div>
+        </fieldset>
+        <p class="error" role="alert"></p>
+        <div class="nav"><button type="button" data-next>Next</button><button type="button" class="ghost" data-back>Back</button></div>
+      </section>
+
+      <section class="step" data-step="location">
+        <h2>Where is it?</h2>
+        <p class="hint">We deliver across Sweden.</p>
+        <label class="field"><span>City, area or venue</span><input type="text" name="location" autocomplete="address-level2" placeholder="e.g. Stockholm, Södermalm" required></label>
+        <fieldset>
+          <legend class="group-label">Setting</legend>
+          <div class="options">
+            <label class="option"><input type="radio" name="setting" value="Indoors" required><span>Indoors</span></label>
+            <label class="option"><input type="radio" name="setting" value="Outdoors"><span>Outdoors</span></label>
+            <label class="option"><input type="radio" name="setting" value="Indoors and outdoors"><span>Both</span></label>
+            <label class="option"><input type="radio" name="setting" value="Venue not decided"><span>Venue not decided yet</span></label>
+          </div>
+        </fieldset>
+        <p class="error" role="alert"></p>
+        <div class="nav"><button type="button" data-next>Next</button><button type="button" class="ghost" data-back>Back</button></div>
+      </section>
+
+      <section class="step" data-step="date">
+        <h2>When is it?</h2>
+        <p class="hint">Pick the date, or tell us roughly when.</p>
+        <label class="field" id="date-field"><span>Date</span><input type="date" name="date" required></label>
+        <label class="check"><input type="checkbox" name="flexible" id="flexible"> No fixed date yet</label>
+        <label class="field" id="timing-field" hidden><span>Rough timing</span><input type="text" name="timing" placeholder="e.g. a Saturday in June 2027"></label>
+        <p class="error" role="alert"></p>
+        <div class="nav"><button type="button" data-next>Next</button><button type="button" class="ghost" data-back>Back</button></div>
+      </section>
+
+      <section class="step" data-step="modules">
+        <fieldset>
+          <legend>What are you interested in?</legend>
+          <p class="hint">Choose as many as you like.</p>
+          <div class="options">
+            <label class="option"><input type="checkbox" name="modules" value="Audio"><span>Audio<small>Festival-grade sound system, installed and operated</small></span></label>
+            <label class="option"><input type="checkbox" name="modules" value="Immersion"><span>Immersion<small>Lighting programs and immersive decor</small></span></label>
+            <label class="option"><input type="checkbox" name="modules" value="Music"><span>Music<small>DJs, DJ station and instruments</small></span></label>
+          </div>
+          <p class="group-label">On request</p>
+          <div class="options">
+            <label class="option"><input type="checkbox" name="modules" value="Bespoke experience design"><span>Bespoke experience design</span></label>
+            <label class="option"><input type="checkbox" name="modules" value="Bar services"><span>Bar services</span></label>
+            <label class="option"><input type="checkbox" name="modules" value="Show services"><span>Show services</span></label>
+            <label class="option"><input type="checkbox" name="modules" value="Photography and film"><span>Photography and film</span></label>
+          </div>
+        </fieldset>
+        <p class="error" role="alert"></p>
+        <div class="nav"><button type="button" data-next>Next</button><button type="button" class="ghost" data-back>Back</button></div>
+      </section>
+
+      <section class="step" data-step="contact">
+        <h2>How do we reach you?</h2>
+        <p class="hint">We only use this to reply about your event.</p>
+        <label class="field"><span>Name</span><input type="text" name="name" autocomplete="name" required></label>
+        <label class="field"><span>Email</span><input type="email" name="email" autocomplete="email" required></label>
+        <label class="field"><span>Phone <em>(optional)</em></span><input type="tel" name="phone" autocomplete="tel"></label>
+        <label class="field"><span>Company <em>(optional)</em></span><input type="text" name="company" autocomplete="organization"></label>
+        <label class="field"><span>Anything else? <em>(optional)</em></span><textarea name="notes" rows="3" placeholder="The occasion, the vibe, the venue…"></textarea></label>
+        <p class="error" role="alert"></p>
+        <div class="nav"><button type="button" data-next>Review</button><button type="button" class="ghost" data-back>Back</button></div>
+      </section>
+
+      <section class="step" data-step="review">
+        <h2>Check your details.</h2>
+        <p class="hint">Send your request and we'll get back to you with availability and a proposal.</p>
+        <dl id="summary"></dl>
+        <p class="error" role="alert"></p>
+        <div class="nav"><button type="submit" id="send">Send request</button><button type="button" class="ghost" data-back>Back</button></div>
+      </section>
+
+      <section class="step" data-step="done">
+        <p class="eyebrow">Received</p>
+        <h2>Thank you.</h2>
+        <p class="hint" id="done-text">We'll be in touch within two working days. Questions in the meantime: <a href="mailto:simon@megalit.studio">simon@megalit.studio</a></p>
+        <div class="nav"><a href="/">Back to megalit.studio</a></div>
+      </section>
+
+    </form>
+  </main>
+
+  <footer>Business inquiries: <a href="mailto:simon@megalit.studio">simon@megalit.studio</a></footer>
+
+  <script>
+    // Where submissions are sent. Leave empty to fall back to a pre-filled email.
+    // Works with any service that accepts a JSON POST (e.g. Formspree: "https://formspree.io/f/XXXXXXX").
+    const ENDPOINT = "";
+    const INBOX = "simon@megalit.studio";
+
+    const form = document.getElementById("flow");
+    const steps = [...form.querySelectorAll(".step")];
+    const progress = document.getElementById("progress");
+    const questionCount = steps.filter(s => !["intro", "review", "done"].includes(s.dataset.step)).length;
+    // Lets each QR code carry its own tag, e.g. /book/?src=flyer
+    const source = new URLSearchParams(location.search).get("src") || "direct";
+    let current = 0;
+
+    const flexible = document.getElementById("flexible");
+    const dateInput = form.elements.date;
+    dateInput.min = new Date().toISOString().slice(0, 10);
+    flexible.addEventListener("change", () => {
+      document.getElementById("timing-field").hidden = !flexible.checked;
+      dateInput.required = !flexible.checked;
+      dateInput.disabled = flexible.checked;
+      if (flexible.checked) form.elements.timing.focus();
+    });
+
+    function show(i) {
+      steps[current].classList.remove("active");
+      current = i;
+      const step = steps[current];
+      step.classList.add("active");
+      const n = current; // intro is index 0, so question steps are 1..questionCount
+      progress.textContent = n >= 1 && n <= questionCount ? `${n} / ${questionCount}` : "";
+      if (step.dataset.step === "review") renderSummary();
+      const first = step.querySelector("input:not([type=hidden]):not([disabled]), textarea, button");
+      if (first && step.dataset.step !== "intro") first.focus({ preventScroll: true });
+      window.scrollTo({ top: 0 });
+    }
+
+    function validate(step) {
+      const error = step.querySelector(".error");
+      if (!error) return true;
+      error.textContent = "";
+      if (step.dataset.step === "modules" && !form.querySelector("[name=modules]:checked")) {
+        error.textContent = "Choose at least one.";
+        return false;
+      }
+      if (step.dataset.step === "date" && flexible.checked && !form.elements.timing.value.trim()) {
+        error.textContent = "Tell us roughly when.";
+        return false;
+      }
+      for (const el of step.querySelectorAll("input, textarea")) {
+        if (el.disabled || el.checkValidity()) continue;
+        error.textContent = el.type === "radio" ? "Choose one option."
+          : el.type === "email" && el.value ? "Check the email address."
+          : el.type === "date" && el.value ? "Choose a date from today onwards."
+          : "Please fill this in.";
+        el.focus();
+        return false;
+      }
+      return true;
+    }
+
+    function answers() {
+      const f = form.elements;
+      return {
+        "Guests": f.guests.value,
+        "Location": f.location.value.trim(),
+        "Setting": f.setting.value,
+        "Date": flexible.checked ? `Not fixed: ${f.timing.value.trim()}` : f.date.value,
+        "Services": [...form.querySelectorAll("[name=modules]:checked")].map(c => c.value).join(", "),
+        "Name": f.name.value.trim(),
+        "Email": f.email.value.trim(),
+        "Phone": f.phone.value.trim(),
+        "Company": f.company.value.trim(),
+        "Notes": f.notes.value.trim(),
+        "Source": source,
+      };
+    }
+
+    function renderSummary() {
+      const dl = document.getElementById("summary");
+      dl.replaceChildren();
+      for (const [k, v] of Object.entries(answers())) {
+        if (!v || k === "Source") continue;
+        const dt = document.createElement("dt"); dt.textContent = k;
+        const dd = document.createElement("dd"); dd.textContent = v;
+        dl.append(dt, dd);
+      }
+    }
+
+    form.addEventListener("input", () => {
+      const error = steps[current].querySelector(".error");
+      if (error) error.textContent = "";
+    });
+
+    form.addEventListener("click", e => {
+      if (e.target.closest("[data-next]")) {
+        if (validate(steps[current])) show(current + 1);
+      } else if (e.target.closest("[data-back]")) {
+        show(current - 1);
+      }
+    });
+
+    // Enter moves forward instead of submitting early
+    form.addEventListener("keydown", e => {
+      if (e.key !== "Enter" || e.target.tagName === "TEXTAREA" || e.target.tagName === "BUTTON") return;
+      e.preventDefault();
+      const next = steps[current].querySelector("[data-next]");
+      if (next) next.click();
+    });
+
+    form.addEventListener("submit", async e => {
+      e.preventDefault();
+      const data = answers();
+      const subject = `Event inquiry: ${data.Name}, ${data.Guests} guests, ${data.Location}`;
+      const error = steps[current].querySelector(".error");
+      error.textContent = "";
+
+      if (!ENDPOINT) {
+        const body = Object.entries(data).filter(([, v]) => v).map(([k, v]) => `${k}: ${v}`).join("\n");
+        location.href = `mailto:${INBOX}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        document.getElementById("done-text").innerHTML =
+          `Your email app should have opened with your request filled in. Press send there and we'll be in touch within two working days. If nothing opened, email <a href="mailto:${INBOX}">${INBOX}</a>.`;
+        show(steps.length - 1);
+        return;
+      }
+
+      const send = document.getElementById("send");
+      send.disabled = true;
+      send.textContent = "Sending…";
+      try {
+        const res = await fetch(ENDPOINT, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Accept": "application/json" },
+          body: JSON.stringify({ ...data, _subject: subject, _replyto: data.Email }),
+        });
+        if (!res.ok) throw new Error(res.status);
+        show(steps.length - 1);
+      } catch {
+        error.innerHTML = `Something went wrong sending your request. Please try again, or email <a href="mailto:${INBOX}">${INBOX}</a>.`;
+      } finally {
+        send.disabled = false;
+        send.textContent = "Send request";
+      }
+    });
+  </script>
+</body>
+</html>
