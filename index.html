@@ -37,7 +37,17 @@
       padding: 4rem 0 3rem;
     }
     .logo { width: clamp(80px, 12vw, 130px); height: auto; display: block; }
-    header { padding: 1.5rem 0 0; }
+    header { padding: 1.5rem 0 0; display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+    .inquiry {
+      flex-shrink: 0;
+      padding: 0.7rem 1.1rem;
+      border: 1px solid #fff;
+      font-size: 0.75rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      transition: background .2s, color .2s;
+    }
+    .inquiry:hover, .inquiry:focus-visible { background: #fff; color: #000; border-color: #fff; }
     h1 {
       margin: 0;
       font-weight: 400;
@@ -75,6 +85,7 @@
 <body>
   <header>
     <h1>Megalit Studio</h1>
+    <a class="inquiry" href="/book/">Make inquiry</a>
   </header>
   <main>
     <img class="logo" src="logo.svg" alt="MEGALIT Studio logo">
