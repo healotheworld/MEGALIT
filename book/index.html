@@ -51,7 +51,10 @@
     .step.active { display: block; animation: fade .3s ease; }
     @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
     @media (prefers-reduced-motion: reduce) { .step.active { animation: none; } }
+    [hidden] { display: none !important; }
     fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
+    fieldset + fieldset { margin-top: 1.75rem; }
+    legend.group-label { margin-top: 0; }
     .eyebrow { margin: 0 0 1rem; font-size: 0.75rem; letter-spacing: 0.3em; text-transform: uppercase; color: #8a8a8a; }
     h2, legend {
       padding: 0;
@@ -78,6 +81,7 @@
     .group-label { margin: 1.75rem 0 0.75rem; font-size: 0.85rem; color: #b0b0b0; }
     .field { display: block; margin-bottom: 1.25rem; }
     .field > span { display: block; margin-bottom: 0.4rem; font-size: 0.85rem; color: #b0b0b0; }
+    .theme-field { margin-top: 1.75rem; }
     .field em { font-style: normal; color: #6a6a6a; }
     input[type=text], input[type=email], input[type=tel], input[type=date], textarea {
       width: 100%;
@@ -136,8 +140,33 @@
       <section class="step active" data-step="intro">
         <p class="eyebrow">Plan your event</p>
         <h2>Tell us about your event.</h2>
-        <p class="hint">Five short questions about size, location, date and the services you need. It takes about a minute, and we reply personally within two working days.</p>
+        <p class="hint">Seven short questions about the occasion, size, location, timing and the services you need. It takes about a minute, and we reply personally within two working days.</p>
         <div class="nav"><button type="button" data-next>Start</button></div>
+      </section>
+
+      <section class="step" data-step="type">
+        <fieldset>
+          <legend>What kind of event is it?</legend>
+          <p class="hint">Who is hosting, and what's the occasion?</p>
+          <div class="options">
+            <label class="option"><input type="radio" name="host" value="Private" required><span>Private</span></label>
+            <label class="option"><input type="radio" name="host" value="Corporate"><span>Corporate</span></label>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend class="group-label">Occasion</legend>
+          <div class="options">
+            <label class="option"><input type="radio" name="occasion" value="Celebration" required><span>Celebration<small>Birthday, anniversary, milestone</small></span></label>
+            <label class="option"><input type="radio" name="occasion" value="Wedding"><span>Wedding</span></label>
+            <label class="option"><input type="radio" name="occasion" value="Company party"><span>Company party<small>Summer or holiday party, kick-off, team event</small></span></label>
+            <label class="option"><input type="radio" name="occasion" value="Launch or brand event"><span>Launch or brand event</span></label>
+            <label class="option"><input type="radio" name="occasion" value="Club night or festival"><span>Club night or festival</span></label>
+            <label class="option"><input type="radio" name="occasion" value="Other"><span>Something else</span></label>
+          </div>
+        </fieldset>
+        <label class="field theme-field"><span>Theme keywords <em>(optional)</em></span><input type="text" name="theme" placeholder="e.g. disco, forest rave, black and gold"></label>
+        <p class="error" role="alert"></p>
+        <div class="nav"><button type="button" data-next>Next</button><button type="button" class="ghost" data-back>Back</button></div>
       </section>
 
       <section class="step" data-step="size">
@@ -173,10 +202,32 @@
         <div class="nav"><button type="button" data-next>Next</button><button type="button" class="ghost" data-back>Back</button></div>
       </section>
 
+      <section class="step" data-step="format">
+        <fieldset>
+          <legend>Day or night?</legend>
+          <p class="hint">When does the party happen?</p>
+          <div class="options">
+            <label class="option"><input type="radio" name="daypart" value="Day" required><span>Day</span></label>
+            <label class="option"><input type="radio" name="daypart" value="Night"><span>Night</span></label>
+            <label class="option"><input type="radio" name="daypart" value="Day into night"><span>Day into night</span></label>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend class="group-label">How long is it?</legend>
+          <div class="options">
+            <label class="option"><input type="radio" name="duration" value="One day or night" required><span>One day or night</span></label>
+            <label class="option"><input type="radio" name="duration" value="More than one day or night"><span>More than one day or night</span></label>
+          </div>
+        </fieldset>
+        <p class="error" role="alert"></p>
+        <div class="nav"><button type="button" data-next>Next</button><button type="button" class="ghost" data-back>Back</button></div>
+      </section>
+
       <section class="step" data-step="date">
         <h2>When is it?</h2>
-        <p class="hint">Pick the date, or tell us roughly when.</p>
-        <label class="field" id="date-field"><span>Date</span><input type="date" name="date" required></label>
+        <p class="hint">Pick the dates, or tell us roughly when.</p>
+        <label class="field"><span>Event date</span><input type="date" name="date" required></label>
+        <label class="field"><span>End date <em id="end-note">(if more than one day or night)</em></span><input type="date" name="end"></label>
         <label class="check"><input type="checkbox" name="flexible" id="flexible"> No fixed date yet</label>
         <label class="field" id="timing-field" hidden><span>Rough timing</span><input type="text" name="timing" placeholder="e.g. a Saturday in June 2027"></label>
         <p class="error" role="alert"></p>
@@ -252,11 +303,14 @@
 
     const flexible = document.getElementById("flexible");
     const dateInput = form.elements.date;
-    dateInput.min = new Date().toISOString().slice(0, 10);
+    const endInput = form.elements.end;
+    const multiDay = () => form.elements.duration.value === "More than one day or night";
+    dateInput.min = endInput.min = new Date().toISOString().slice(0, 10);
+    dateInput.addEventListener("change", () => { endInput.min = dateInput.value || dateInput.min; });
     flexible.addEventListener("change", () => {
       document.getElementById("timing-field").hidden = !flexible.checked;
       dateInput.required = !flexible.checked;
-      dateInput.disabled = flexible.checked;
+      dateInput.disabled = endInput.disabled = flexible.checked;
       if (flexible.checked) form.elements.timing.focus();
     });
 
@@ -268,6 +322,7 @@
       const n = current; // intro is index 0, so question steps are 1..questionCount
       progress.textContent = n >= 1 && n <= questionCount ? `${n} / ${questionCount}` : "";
       if (step.dataset.step === "review") renderSummary();
+      if (step.dataset.step === "date") document.getElementById("end-note").textContent = multiDay() ? "" : "(if more than one day or night)";
       const first = step.querySelector("input:not([type=hidden]):not([disabled]), textarea, button");
       if (first && step.dataset.step !== "intro") first.focus({ preventScroll: true });
       window.scrollTo({ top: 0 });
@@ -285,6 +340,18 @@
         error.textContent = "Tell us roughly when.";
         return false;
       }
+      if (step.dataset.step === "date" && !flexible.checked && dateInput.value) {
+        if (endInput.value && endInput.value <= dateInput.value) {
+          error.textContent = "The end date must be after the event date.";
+          endInput.focus();
+          return false;
+        }
+        if (multiDay() && !endInput.value) {
+          error.textContent = "Add the end date.";
+          endInput.focus();
+          return false;
+        }
+      }
       for (const el of step.querySelectorAll("input, textarea")) {
         if (el.disabled || el.checkValidity()) continue;
         error.textContent = el.type === "radio" ? "Choose one option."
@@ -300,10 +367,16 @@
     function answers() {
       const f = form.elements;
       return {
+        "Host": f.host.value,
+        "Occasion": f.occasion.value,
+        "Theme": f.theme.value.trim(),
         "Guests": f.guests.value,
         "Location": f.location.value.trim(),
         "Setting": f.setting.value,
-        "Date": flexible.checked ? `Not fixed: ${f.timing.value.trim()}` : f.date.value,
+        "Day or night": f.daypart.value,
+        "Length": f.duration.value,
+        "Event date": flexible.checked ? `Not fixed: ${f.timing.value.trim()}` : f.date.value,
+        "End date": flexible.checked ? "" : f.end.value,
         "Services": [...form.querySelectorAll("[name=modules]:checked")].map(c => c.value).join(", "),
         "Name": f.name.value.trim(),
         "Email": f.email.value.trim(),
@@ -349,7 +422,7 @@
     form.addEventListener("submit", async e => {
       e.preventDefault();
       const data = answers();
-      const subject = `Event inquiry: ${data.Name}, ${data.Guests} guests, ${data.Location}`;
+      const subject = `Event inquiry: ${data.Name}, ${data.Occasion.toLowerCase()}, ${data.Guests} guests, ${data.Location}`;
       const error = steps[current].querySelector(".error");
       error.textContent = "";
 
