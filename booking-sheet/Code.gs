@@ -27,8 +27,7 @@ function doPost(e) {
   const lock = LockService.getScriptLock();
   lock.waitLock(10000);
   try {
-    const sheet = SpreadsheetApp.getActive().getSheetByName(SHEET_NAME);
-    sheet.appendRow([new Date(), "New"].concat(FIELDS.map(f => clean(data[f]))));
+    requestsSheet().appendRow([new Date(), "New"].concat(FIELDS.map(f => clean(data[f]))));
   } finally {
     lock.releaseLock();
   }
@@ -45,6 +44,30 @@ function doPost(e) {
   }
 
   return reply({ ok: true });
+}
+
+// Finds the "Requests" tab, or creates it with headers and a Status dropdown on first use.
+function requestsSheet() {
+  const book = SpreadsheetApp.getActive();
+  let sheet = book.getSheetByName(SHEET_NAME);
+  if (sheet) return sheet;
+
+  sheet = book.insertSheet(SHEET_NAME, 0);
+  const headers = ["Received", "Status"].concat(FIELDS);
+  sheet.getRange(1, 1, 1, headers.length).setValues([headers]).setFontWeight("bold").setBackground("#eeeeee");
+  sheet.setFrozenRows(1);
+  sheet.getRange("B2:B").setDataValidation(
+    SpreadsheetApp.newDataValidation()
+      .requireValueInList(["New", "Contacted", "Proposal sent", "Booked", "Declined"], true)
+      .setAllowInvalid(true)
+      .build()
+  );
+  return sheet;
+}
+
+// Run once from the Apps Script editor (select "setup", click Run) to create the tab and grant permissions.
+function setup() {
+  requestsSheet();
 }
 
 // Keeps text as plain text, so input like "=SUM(...)" or "+46 70..." is never run as a formula.
