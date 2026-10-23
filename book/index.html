@@ -52,6 +52,7 @@
     @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
     @media (prefers-reduced-motion: reduce) { .step.active { animation: none; } }
     [hidden] { display: none !important; }
+    .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
     fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
     fieldset + fieldset { margin-top: 1.75rem; }
     legend.group-label { margin-top: 0; }
@@ -262,6 +263,7 @@
         <label class="field"><span>Email</span><input type="email" name="email" autocomplete="email" required></label>
         <label class="field"><span>Phone <em>(optional)</em></span><input type="tel" name="phone" autocomplete="tel"></label>
         <label class="field"><span>Company <em>(optional)</em></span><input type="text" name="company" autocomplete="organization"></label>
+        <label class="hp" aria-hidden="true">Website<input type="text" name="website" tabindex="-1" autocomplete="off"></label>
         <label class="field"><span>Anything else? <em>(optional)</em></span><textarea name="notes" rows="3" placeholder="The occasion, the vibe, the venue…"></textarea></label>
         <p class="error" role="alert"></p>
         <div class="nav"><button type="button" data-next>Review</button><button type="button" class="ghost" data-back>Back</button></div>
@@ -288,8 +290,8 @@
   <footer>Business inquiries: <a href="mailto:simon@megalit.studio">simon@megalit.studio</a></footer>
 
   <script>
-    // Where submissions are sent. Leave empty to fall back to a pre-filled email.
-    // Works with any service that accepts a JSON POST (e.g. Formspree: "https://formspree.io/f/XXXXXXX").
+    // Where submissions are sent: the Google Apps Script web app URL (see booking-sheet/Code.gs).
+    // Leave empty to fall back to a pre-filled email.
     const ENDPOINT = "";
     const INBOX = "simon@megalit.studio";
 
@@ -439,12 +441,14 @@
       send.disabled = true;
       send.textContent = "Sending…";
       try {
+        // text/plain keeps this a "simple" request, which Google Apps Script accepts cross-origin
         const res = await fetch(ENDPOINT, {
           method: "POST",
-          headers: { "Content-Type": "application/json", "Accept": "application/json" },
-          body: JSON.stringify({ ...data, _subject: subject, _replyto: data.Email }),
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify({ ...data, _subject: subject, website: form.elements.website.value }),
         });
-        if (!res.ok) throw new Error(res.status);
+        const result = await res.json().catch(() => ({}));
+        if (!res.ok || !result.ok) throw new Error(result.error || res.status);
         show(steps.length - 1);
       } catch {
         error.innerHTML = `Something went wrong sending your request. Please try again, or email <a href="mailto:${INBOX}">${INBOX}</a>.`;
